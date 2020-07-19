@@ -53,7 +53,7 @@ public class Request {
 ```java
 package guaraded.suspension;
 
-import java.util.LinkedList;
+import guarded.suspension.Request;import java.util.LinkedList;
 import java.util.Queue;
 
 public class RequestQueue {
@@ -82,7 +82,7 @@ public class RequestQueue {
 ```java
 package guaraded.suspension;
 
-import java.util.Random;
+import guarded.suspension.Request;import guarded.suspension.RequestQueue;import java.util.Random;
 
 public class ClientThread extends Thread {
     private final Random random;
@@ -114,7 +114,7 @@ public class ClientThread extends Thread {
 ```java
 package guaraded.suspension;
 
-import java.util.Random;
+import guarded.suspension.Request;import guarded.suspension.RequestQueue;import java.util.Random;
 
 public class ServerThread extends Thread {
     private final RequestQueue requestQueue;

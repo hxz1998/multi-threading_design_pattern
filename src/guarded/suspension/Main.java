@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2020.
  */
-package guaraded.suspension;
+package guarded.suspension;
 
 public class Main {
     public static void main(String[] args) {

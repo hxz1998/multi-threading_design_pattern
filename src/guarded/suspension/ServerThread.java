@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2020.
  */
-package guaraded.suspension;
+package guarded.suspension;
 
 import java.util.Random;
 
