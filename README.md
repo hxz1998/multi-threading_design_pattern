@@ -115,4 +115,17 @@
         List<Integer> list = new CopyOnWriteArrayList<>();  // 写时复制技术来避免冲突，该方法适用于频繁 读 操作，如果是频繁 写 ，那么就不合理
         ```
     2. 写时复制（copy-on-write）：对集和进行“写”操作时，内部会对确保安全的数组进行整体复制，这样就不用担心读取元素时内部元素被修改。
-        
+    
+## 第三章 Guarded Suspension 模式
+
+1. Guarded Suspension 模式通过 **让线程等待** 来保证实例的安全性。它类似于 **添加了条件** 的 `Single Thread Execution` 模式。
+同时也是多线程版的 `if` 语句。
+ 
+2. 在该模式中，线程之所以等待 `wait` ，是因为没有满足守护条件。也就是说该守护条件进行了保护，从而阻止了线程继续向前执行。
+
+3. Guarded Suspension 模式中的角色
+    1. Guarded Object（被守护对象）：持有被守护的方法，当守护条件成立，那么可以立即执行，否则就等待。守护条件的成立与否会随着 `Guarded Object` 对象的状态不同而发生改变。
+
+4. 千万不可以忘记改变状态，否则会失去生存性。如果忘记改变守护条件的状态，那么不管多少次 `notifyAll/notify` 都不会继续执行。
+
+5. `java.util.concurrent.LinkedBlockingQueue` 是一个线程安全的队列。其原理和该模式一样，保证线程安全。
