@@ -2,6 +2,8 @@
 
 > 参考书目[《图解Java多线程设计模式》](https://book.douban.com/subject/27116724/) [日] 结城浩 著
 
+> 源程序：[https://github.com/hxz1998/multi-threading_design_pattern](https://github.com/hxz1998/multi-threading_design_pattern)
+
 ## 0. 关于UML
 
 1. 类图
@@ -67,7 +69,7 @@
     3. 调试程序本身就不是线程安全的。
     
 2. Single Threaded Execution 出现的角色
-    1. Shared Resource（共享资源）：需要被多个线程所访问的类，对于其中的不安全的方法 `unsafeMethod` ，需要使用 `synchronized` 来保护。
+    1. `Shared Resource`（共享资源）：需要被多个线程所访问的类，对于其中的不安全的方法 `unsafeMethod` ，需要使用 `synchronized` 来保护。
     2. 只允许单个线程执行的程序部分称为 **临界区** 。
     
 3. 什么时候使用？
@@ -101,7 +103,7 @@
 2. 巧妙利用该模式，可以提高性能。
 
 3. Immutable 出现的角色
-    1. Immutable（不可变对象），该类中的字段，在创建完成以后，就不再改变。
+    1. `Immutable`（不可变对象），该类中的字段，在创建完成以后，就不再改变。
     
 3. 何时使用
     1. 实例创建后，状态不发生改变。
@@ -124,7 +126,7 @@
 2. 在该模式中，线程之所以等待 `wait` ，是因为没有满足守护条件。也就是说该守护条件进行了保护，从而阻止了线程继续向前执行。
 
 3. Guarded Suspension 模式中的角色
-    1. Guarded Object（被守护对象）：持有被守护的方法，当守护条件成立，那么可以立即执行，否则就等待。守护条件的成立与否会随着 `Guarded Object` 对象的状态不同而发生改变。
+    1. `Guarded Object`（被守护对象）：持有被守护的方法，当守护条件成立，那么可以立即执行，否则就等待。守护条件的成立与否会随着 `Guarded Object` 对象的状态不同而发生改变。
 
 4. 千万不可以忘记改变状态，否则会失去生存性。如果忘记改变守护条件的状态，那么不管多少次 `notifyAll/notify` 都不会继续执行。
 
@@ -148,4 +150,43 @@
     2. 通过返回值来表示 `balk`
     3. 通过异常来表示操作
     
-6. 超时操作： `wait()` 方法可以指定参数，例如 `obj.wait(1000)` ，即指定等待多久。    
+6. 超时操作： `wait()` 方法可以指定参数，例如 `obj.wait(1000)` ，即指定等待多久。
+
+## 第五章 Producer-Consumer 模式
+
+1. Producer-Consumer 模式完成的是：通过在两者之间建立 **“桥梁角色”** ，来安全的传送数据。
+一般来说会有多个 `Producer` 也会有多个 `Consumer` ，当两者都只有一个时，也被称为 **Pipe** 模式。
+
+2. Producer-Consumer 模式中的角色
+    1. `Data` ：由 `Producer` 角色生成，由 `Consumer` 角色使用。
+    2. `Producer`：负责生成 `Data` ，然后传送给 `Consumer`。
+    3. `Consumer`：负责使用 `Data`。
+    4. `Channel`：安全传输的通道，里面有线程安全的方法。会对 `Producer` 角色和 `Consumer` 角色的访问执行互斥处理。
+
+3. `Producer` 和 `Consumer` 之间当然也可以直接传输数据，不通过 `Channel` ，不过这样一来，就成了简单的函数调用，
+`Consumer` 对 `Data` 的处理耗时需要由 `Producer` 来承担。就好比餐厅大厨等着一位顾客吃完之后再去做下一锅。
+
+4. **协调运行** 和 **互斥处理** 是内外统一的：
+    * 线程的协调运行需要考虑 “放在中间的东西”
+    * 线程的互斥处理需要考虑 ”应该保护的东西“
+    
+5. 当 `Consumer` 只有一个的时候，就不需要对 `Consumer` 的操作进行 `synchronized` 保护了。这样也可以提高程序性能。
+
+6. `notify` 和 `interrupt` 方法
+    * 相同点：
+        1. 都可以让正在 `wait()` 的线程重新运行。
+    * 不同点：
+        1. `notify` 和 `notifyAll` 唤醒的是该实例等待队列中的线程，而不是指定的线程。 `notify/notifyAll` 唤醒线程后，会继续执行 `wait()` 后面的程序。 `notify/notifyAll` 要执行，必须获得实例的锁。
+        2. `interrupt` 直接指定线程并且唤醒，当该线程处于 `wait()` 或者 `sleep()` 时，会抛出 `InterruptedException` 异常。但是不需要获得锁。
+        
+7. `isInterrupted` 、 `interrupt` 和 `Thread.interrupted` 方法
+    
+    |方法名|说明|
+    |---|---|
+    |`isInterrupted`|检查中断状态，`Thread` 类的实例方法，不会改变中断状态|
+    |`interrupt`|改变中断状态，使得状态变为中断状态。并不会直接抛出异常|
+    |`interrupted`|检查并且清除中断状态的方法|
+    
+8. 没事儿不要用 `stop()` ！！！
+        
+        
