@@ -199,10 +199,10 @@
 
 4. 读写冲突矩阵
 
-    |\|读取|写入|
-    |---|---|---|
-    |读取|无冲突|`read-write conflict`|
-    |写入|`read-write conflict`|`write-write conflict`|
+||读取|写入|
+|---|---|---|
+|读取|无冲突|`read-write conflict`|
+|写入|`read-write conflict`|`write-write conflict`|
     
 5. Read-Write Lock 模式中的角色
     1. `SharedResource` ，使用 `ReadWriteLock` 来控制内部状态线程安全地改变
