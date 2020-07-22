@@ -242,5 +242,23 @@
     4. `java.util.concurrent.ScheduledExecutorService` 接口：将 **被调度的线程的执行** 抽象化了
     5. `java.util.concurrent.Executors` 接口：用于 **创建实例** 的工具类
     
+## 第八章 Worker Thread 模式
+
+1. 抽象出来“工人”这个概念，**工人线程（Worker Thread）** 会从 `Channel` 中取出来工作，并且完成后继续等待新的工作。
+
+2. Worker Thread 模式中的角色
+    1. `Client` 委托者，负责产生 `Request` ，并将其交给 `Channel` 角色
+    2. `Channel` 通信线路，负责接收 `Request` 并且将其交给 `Worker` 角色完成
+    3. `Worker` 工作者，完成 `Request` 中指定的方法
+    4. `Request` 任务抽象
+
+3. Worker Thread模式提高了系统的吞吐量，因为它可以连续重复使用同一个线程，省去了启动线程所用的时间。
+
+4. 调用与执行的分离：`Client` 角色发出的 `Request` 相当于 **调用** 操作，而 `Worker` 角色相当于对请求的 **执行**，这样一来可以完成以下操作
+    1. 提高响应速度：因为调用完之后，可以去继续执行其他处理，不需要等待执行结束
+    2. 控制执行顺序：可以为 `Request` 来设置优先级，来控制顺序
+    3. 取消和反复执行：即使调用了，只要没执行就可以取消，而且还可以保存 `Request` 来反复执行
+    4. 分布式系统的基础：通过网络将 `Request` 传送 
+     
         
         
