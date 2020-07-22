@@ -220,5 +220,27 @@
 `ReadWriteLock` 提供了 **用于读取的锁** 和 **用于写入的锁** 两个逻辑锁，但实际上只有一个 `ReadWriteLock` 实例所持有的物理锁。
 
 9. 已有现成的工具包使用 `java.util.concurrent.locks`
+
+## 第七章 Thread-Per-Message 模式
+
+1. 为每个命令或请求都分配一个独立的线程，由这个线程来处理任务。
+
+2. Thread-Per-Message 模式中的角色
+    1. `Client` 委托人角色，该角色会向 `Host` 发出请求，但是并不晓得 `Host` 是如何完成该请求的。
+    2. `Host` 该角色收到 `Client` 的请求 `request` ，并且创建新线程，新创建的线程会使用 `Helper` 角色来完成具体任务。
+    3. `Helper` 小助手，为 `Host` 来提供实际的处理功能。
+
+3. 何时使用？
+    1. 当 `handle` 操作非常耗时，或者 `handle` 操作需要等待输入输出时。
+    2. 平衡 **`handle` 操作花费的时间** 和 **线程启动花费的时间**。
+    3. 应用于服务器，处理用户请求。
+    
+4. 可使用的接口
+    1. `java.util.concurrent.ThreadFactory` 接口：将线程 **创建** 抽象化了
+    2. `java.util.concurrent.Executor` 接口：将线程 **执行** 抽象化了
+    3. `java.util.concurrent.ExecutorService` 接口：将 **被复用的线程** 抽象化了
+    4. `java.util.concurrent.ScheduledExecutorService` 接口：将 **被调度的线程的执行** 抽象化了
+    5. `java.util.concurrent.Executors` 接口：用于 **创建实例** 的工具类
+    
         
         
