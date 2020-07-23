@@ -276,6 +276,19 @@
 4. Future 模式不让主线程久等，而且通常情况下，Future 角色只发生一次改变，不过也可能根据实际情况多次设置。
 
 5. 如果想获取线程处理完之后的返回值，也可以使用 **回调（callback）** 的方式来实现，例如 `java.util.concurrent.Callable` 接口的使用。
+
+## 第十章 Two-Phase Termination 模式
+
+1. Two-Phase Termination 模式的要点：
+    1. 安全地终止线程（安全性）
+    2. 必定会进行终止处理（生存性）
+    3. 发出终止请求后尽快进行终止处理（响应性）
+    
+2. Two-Phase Termination 模式中的角色
+    1. `TerminationRequest` 终止请求发出者：负责发出终止请求
+    2. `Terminator` 终止者：负责终止请求，提供了 `shutdownRequest()` 方法，而且呀，`shutdownRequest()` 方法不需要使用 `Single Threaded Execution` 模式.
+
+3. 为了能够在接受到终止请求后立即开始终止处理，可以在执行长时间处理 **前** 检查 `shutdownRequested` 标志，或者调用 `isShutdownRequested` 方法。
      
         
         
