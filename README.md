@@ -289,6 +289,22 @@
     2. `Terminator` 终止者：负责终止请求，提供了 `shutdownRequest()` 方法，而且呀，`shutdownRequest()` 方法不需要使用 `Single Threaded Execution` 模式.
 
 3. 为了能够在接受到终止请求后立即开始终止处理，可以在执行长时间处理 **前** 检查 `shutdownRequested` 标志，或者调用 `isShutdownRequested` 方法。
-     
         
-        
+## 第十一章 Thread-Specific Storage 模式
+
+1. 其他称呼：
+    1. `Per-Thread Atrribute`：线程各自属性
+    2. `Thread-Specific Data`：线程专有数据
+    3. `Thread-Specific Field`：线程特有字段
+    4. `Thread-Local Storage`：线程中的局部存储空间
+    
+2. 关键的 `java.lang.ThreadLocal` 类：该类提供了一个储物间的抽象，为每一个线程提供专有的存储空间。
+    1. `set` 方法：将通过 **参数** 接收的实例与 **调用该方法的线程** 对应并存储。
+    2. `get` 方法：将上面存储的内容，依据线程匹配原则取出来。
+    
+3. Thread-Specific Storage 模式中的角色
+    1. `Client` 委托者：将处理委托给 `TSObjectProxy` 角色，而 `TSObjectProxy` 角色会被多个 `Client` 所共用。
+    2. `TSObjectProxy` 线程特有的对象的代理人：将使用 `TSObjectCollection` 获取与当前线程匹配的 `TSObject` 角色，然后将任务交给 `TSObject` 角色
+    3. `TSObjectCollection` 线程特有对象集和：一张对应表， `Client` 角色与 `TSObject` 相对应的表。
+    4. `TSObject` 线程特有对象：保存线程特有的信息，只会被单线程（与之匹配的 `Client` ）调用。
+    

@@ -25,4 +25,7 @@ hs_err_pid*
 *.iml
 .idea/**
 data.txt
+Alice-log.txt
+Bob-log.txt
+Chris-log.txt
 out/
